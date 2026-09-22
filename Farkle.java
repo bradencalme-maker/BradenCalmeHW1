@@ -41,6 +41,12 @@ public class Farkle {
                         score =fourCombos(meld);
                         if(score == 0){
                             score = threeCombos(meld);
+                            if(score == 0){
+                                score = twoCombos(meld);
+                                if (score == 0){
+                                    score = oneCombos(meld);
+                                }
+                            }
                         }
                     }
                 }
@@ -58,6 +64,9 @@ public class Farkle {
                             score = twoCombos(meld);
                             if(score == 0){
                                 score = oneCombos(meld);
+                                if (score == 0){
+                                    score = oneCombos(meld);
+                                }
                             }
                         }
                     }
@@ -156,7 +165,8 @@ public class Farkle {
         for (int i =0; i <dieLeft/2; i++){
             //hand.add((int)(Math.random() * 6) + 1);
             hand.add(1);
-            hand.add(5);
+            hand.add(2);
+
         }
 
     }
@@ -419,6 +429,12 @@ public class Farkle {
        while(!quit){
         roll(hand,dieLeft);
         handDisplay.addAll(hand);
+        handDisplay = sort(handDisplay);
+        int farkled = test(handDisplay, meldScore);
+        if (farkled == 0){
+            System.out.println("You farkled");
+            quit = true;
+            }else{
         menuDisplay(dieLeft, hand, meld, meldScore);
         getInput(hand, meld);
         while(!bank && !quit){
@@ -429,6 +445,6 @@ public class Farkle {
             getInput(hand,meld);
         }
        }
-
+    }
     }
 }
