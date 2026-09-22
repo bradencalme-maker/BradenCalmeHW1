@@ -135,8 +135,8 @@ public class Farkle {
     static void getInput(ArrayList<Integer> hand, ArrayList<Integer> meld){
         ArrayList<Integer> deletes = new ArrayList<>();
         Scanner choice = new Scanner(System.in);
-        String userChoice = choice.nextLine();
-        String[] parts = userChoice.split(" ");
+        String userChoice = choice.nextLine().toUpperCase();
+        String[] parts = userChoice.split("");
         for (int i = 0; i < parts.length;i++){
             switch(parts[i]){
                 case "A" -> {
@@ -275,7 +275,7 @@ public class Farkle {
         "(K) Bank Meld & End Round\n" +
         "(Q) Quit game\n\n" +
 
-        "Enter letters for your choice(s) in the format A B C");
+        "Enter letters for your choice(s):");
     }
 
     static int sixCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
