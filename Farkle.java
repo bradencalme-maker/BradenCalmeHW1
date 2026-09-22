@@ -11,6 +11,28 @@ public class Farkle {
     static ArrayList<Integer> handDisplay = new ArrayList<>();
     static ArrayList<Integer> meldDisplay = new ArrayList<>();
 
+    static boolean checkFarkle(ArrayList<Integer> hand) {
+        ArrayList<Integer> check = new ArrayList<>();
+        check.addAll(hand);
+        sort(check);
+        for (int num : check) {
+            if (num == 1 || num == 5) {
+                return false;
+            }
+        }
+        for (int i = 0; i < check.size() - 2; i++) {
+            if (check.get(i) == check.get(i + 1) && check.get(i) == check.get(i + 2)) {
+                return false;
+            }
+        }
+        if (check.size() == 6) {
+            if (check.get(0) == check.get(1) && check.get(2) == check.get(3) && check.get(4) == check.get(5)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     static ArrayList<Integer> sort(ArrayList<Integer> meld) {
         int min;
         int minIndex;
@@ -31,20 +53,20 @@ public class Farkle {
         return meld;
     }
 
-    static int test(ArrayList<Integer> meld, int meldScore){
+    static int test(ArrayList<Integer> meld, int meldScore, boolean isMeldDisplay){
          switch (meld.size()){
             case 6 ->{
-                int score =sixCombos(meld);
+                int score =sixCombos(meld, isMeldDisplay);
                 if (score ==0){
-                    score = fiveCombos(meld);
+                    score = fiveCombos(meld, isMeldDisplay);
                     if (score == 0) {
-                        score =fourCombos(meld);
+                        score =fourCombos(meld, isMeldDisplay);
                         if(score == 0){
-                            score = threeCombos(meld);
+                            score = threeCombos(meld, isMeldDisplay);
                             if(score == 0){
-                                score = twoCombos(meld);
+                                score = twoCombos(meld, isMeldDisplay);
                                 if (score == 0){
-                                    score = oneCombos(meld);
+                                    score = oneCombos(meld, isMeldDisplay);
                                 }
                             }
                         }
@@ -55,17 +77,17 @@ public class Farkle {
             }
             case 5 ->{
 
-                int score = fiveCombos(meld);
+                int score = fiveCombos(meld, isMeldDisplay);
                 if (score == 0) {
-                    score =fourCombos(meld);
+                    score =fourCombos(meld, isMeldDisplay);
                     if(score == 0){
-                        score = threeCombos(meld);
+                        score = threeCombos(meld, isMeldDisplay);
                         if(score == 0){
-                            score = twoCombos(meld);
+                            score = twoCombos(meld, isMeldDisplay);
                             if(score == 0){
-                                score = oneCombos(meld);
+                                score = oneCombos(meld, isMeldDisplay);
                                 if (score == 0){
-                                    score = oneCombos(meld);
+                                    score = oneCombos(meld, isMeldDisplay);
                                 }
                             }
                         }
@@ -74,37 +96,37 @@ public class Farkle {
                 meldScore+=score;
             }
             case 4 ->{
-                int score =fourCombos(meld);
+                int score =fourCombos(meld, isMeldDisplay);
                     if(score == 0){
-                        score = threeCombos(meld);
+                        score = threeCombos(meld, isMeldDisplay);
                         if(score == 0){
-                            score = twoCombos(meld);
+                            score = twoCombos(meld, isMeldDisplay);
                             if(score == 0){
-                                score = oneCombos(meld);
+                                score = oneCombos(meld, isMeldDisplay);
                             }
                         }
                     }
                 meldScore+=score;
             }
             case 3 ->{
-                int score = threeCombos(meld);
+                int score = threeCombos(meld, isMeldDisplay);
                 if(score == 0){
-                    score = twoCombos(meld);
+                    score = twoCombos(meld, isMeldDisplay);
                     if(score == 0){
-                        score = oneCombos(meld);
+                        score = oneCombos(meld, isMeldDisplay);
                     }
                 }
                 meldScore+=score;
             }
             case 2 ->{
-                int score = twoCombos(meld);
+                int score = twoCombos(meld, isMeldDisplay);
                     if(score == 0){
-                        score = oneCombos(meld);
+                        score = oneCombos(meld, isMeldDisplay);
                     }
                 meldScore+=score;
             }
             case 1 ->{
-                meldScore+=oneCombos(meld);
+                meldScore+=oneCombos(meld, isMeldDisplay);
             }
          }
             return meldScore;
@@ -120,28 +142,34 @@ public class Farkle {
                 case "A" -> {
                     meld.add(hand.get(0));
                     deletes.add(0);
-                    System.out.println("add one");
+                    System.out.println("add one" + meld);
+                    dieLeft--;
                 }
                 case "B" -> {
                     meld.add(hand.get(1));
                     deletes.add(1);
-                    System.out.println("add two");
+                    System.out.println("add two"+ meld);
+                    dieLeft--;
                 }
                 case "C" -> {
                     meld.add(hand.get(2));
                     deletes.add(2);
+                    dieLeft--;
                 }
                 case "D" -> {
                     meld.add(hand.get(3));
                     deletes.add(3);
+                    dieLeft--;
                 }
                 case "E" -> {
                     meld.add(hand.get(4));
                     deletes.add(4);
+                    dieLeft--;
                 }
                 case "F" -> {
                     meld.add(hand.get(5));
                     deletes.add(5);
+                    dieLeft--;
                 }
                 case "Q" ->{
                     quit = true;
@@ -155,6 +183,7 @@ public class Farkle {
             hand.remove(deletes.get(i).intValue());
         }
 
+        System.out.println(meld + " " + deletes);
         handDisplay.clear();
         handDisplay.addAll(hand);
         deletes.clear();
@@ -250,7 +279,7 @@ public class Farkle {
         "Enter letters for your choice(s)");
     }
 
-    static int sixCombos(ArrayList<Integer> meld){
+    static int sixCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("sixCombos");
         int goodHands[] [] = {{1,1,1,1,1,1},
                               {1,2,3,4,5,6},
@@ -300,34 +329,38 @@ public class Farkle {
                 }
                 case 0 -> {//for straight 
                     score+=1000;
-                    meldDisplay.addAll(meld);
-                    meld.clear();
-                    dieLeft = 0;
+                    if(!isMeldDisplay){
+                        meldDisplay.addAll(meld);
+                        meld.clear();
+                    }
                 }
                 case 1 -> { //for 6 ones
                     score+=1300;
-                    meldDisplay.addAll(meld);
-                    meld.clear();
-                    dieLeft=0;
+                    if(!isMeldDisplay){
+                        meldDisplay.addAll(meld);
+                        meld.clear();
+                    }
                 }
                 case 21,22,23,24,25 ->{
                     score+= (100*meld.get(1) + 300*meld.get(1));
-                    meldDisplay.addAll(meld);
-                    meld.clear();
-                    dieLeft = 0;
+                    if(!isMeldDisplay){
+                        meldDisplay.addAll(meld);
+                        meld.clear();
+                    }
                 }
                 default -> { //for three pair
                     score+=750;
-                    meldDisplay.addAll(meld);
-                    meld.clear();
-                    dieLeft =0;
+                    if(!isMeldDisplay){
+                        meldDisplay.addAll(meld);
+                        meld.clear();
+                    }
                 }
             }
-        return 0;
+        return score;
     
     }
 
-    static int fiveCombos(ArrayList<Integer> meld){
+    static int fiveCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("fiveCombos");
         int score = 0;
         for (int i =0; i < meld.size()-4; i++){
@@ -337,14 +370,16 @@ public class Farkle {
                     }else{
                         score+=(3*(meld.get(i)*100));
                     }
-                meldDisplay.addAll(meld);
-                meld.remove(i+4); meld.remove(i+3); meld.remove(i+2); meld.remove(i+1); meld.remove(i); dieLeft-=5;
+                if(!isMeldDisplay){
+                    meldDisplay.addAll(meld);
+                    meld.remove(i+4); meld.remove(i+3); meld.remove(i+2); meld.remove(i+1); meld.remove(i);
+                }
                 }
         }
         return score;
     }
 
-    static int fourCombos(ArrayList<Integer> meld){
+    static int fourCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("fourCombos");
         int score = 0;
         for (int i =0; i < meld.size()-3; i++)
@@ -354,15 +389,18 @@ public class Farkle {
                 }else{
                     score+=(2*(meld.get(i)*100));
                 }
-                meldDisplay.addAll(meld);
-                meld.remove(i+3); meld.remove(i+2); meld.remove(i+1); meld.remove(i); dieLeft-=4;
+                if(!isMeldDisplay){
+                    meldDisplay.addAll(meld);
+                    meld.remove(i+3); meld.remove(i+2); meld.remove(i+1); meld.remove(i);
+                }
         }
         return score;
     }
 
-    static int threeCombos(ArrayList<Integer> meld){
+    static int threeCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("threeCombos "+ meld);
         int score = 0;
+        System.out.println(meld.size());
         for (int i =0; i < meld.size()-2; i++)
             if(meld.get(i) == meld.get(i+1) && meld.get(i) == meld.get(i+2)){
                 if(meld.get(i) == 1){
@@ -370,13 +408,15 @@ public class Farkle {
                 }else{
                     score+=(meld.get(i)*100);
                 }
-                meldDisplay.addAll(meld);
-                meld.remove(i+2); meld.remove(i+1); meld.remove(i); dieLeft-=3;
+                if(!isMeldDisplay){
+                    meldDisplay.addAll(meld);
+                    meld.remove(i+2); meld.remove(i+1); meld.remove(i);
+                }
             }
         return score;
     }
 
-    static int twoCombos(ArrayList<Integer> meld){
+    static int twoCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("twoCombos");
         int score = 0;
         int possibleScore = 0 ;
@@ -393,31 +433,37 @@ public class Farkle {
         }
         if (validValues == 2 ){
             score+=possibleScore;
-            meldDisplay.addAll(meld);
-            meld.remove(1); meld.remove(0); dieLeft-=2;
+            if(!isMeldDisplay){
+                meldDisplay.addAll(meld);
+                meld.remove(1); meld.remove(0);
+            }
         }
         return score;
     }
 
-    static int oneCombos(ArrayList<Integer> meld){
+    static int oneCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("oneCombos");
         int score = 0;
         int possibleScore = 0 ;
         int validValues = 0;
         if (meld.get(0) == 1){
             score+=100;
-            meldDisplay.addAll(meld);
-            meld.remove(0);
-            dieLeft--;
+            if(!isMeldDisplay){
+                meldDisplay.addAll(meld);
+                meld.remove(0);
+            }
 
         }else if (meld.get(0) == 5){
             score+=50;
-            meldDisplay.addAll(meld);
-            meld.remove(0);
-            dieLeft--;
+            if(!isMeldDisplay){
+                meldDisplay.addAll(meld);
+                meld.remove(0);
+            }
         } else {
             System.out.println("Invalid Number combos try again");
-            meld.clear();
+            if(!isMeldDisplay){
+                meld.clear();
+            }
         }
         return score;
     }
@@ -429,18 +475,19 @@ public class Farkle {
        while(!quit){
         roll(hand,dieLeft);
         handDisplay.addAll(hand);
-        handDisplay = sort(handDisplay);
-        int farkled = test(handDisplay, meldScore);
-        if (farkled == 0){
+        if (checkFarkle(hand)){
             System.out.println("You farkled");
             quit = true;
             }else{
         menuDisplay(dieLeft, hand, meld, meldScore);
         getInput(hand, meld);
         while(!bank && !quit){
-            while (meld.size() != 0){
-            meldScore = test(meld, meldScore);
-            }
+            test(meld, meldScore, false);
+            meldScore = 0;
+            System.out.println(meldDisplay);
+            meldScore = test(meldDisplay, meldScore, true);
+                        System.out.println(meldDisplay);
+
             menuDisplay(dieLeft, handDisplay, meldDisplay, meldScore);
             getInput(hand,meld);
         }
