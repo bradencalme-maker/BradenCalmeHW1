@@ -8,8 +8,8 @@ public class Farkle {
     static int dieLeft = 6;
     static boolean quit = false;
     static boolean bank = false;
-    static ArrayList<Integer> handDisplay = new ArrayList<>();
-    static ArrayList<Integer> meldDisplay = new ArrayList<>();
+    static ArrayList<Integer> handDisplay = new ArrayList<>(); //have to change to an array
+    static ArrayList<Integer> meldDisplay = new ArrayList<>(); // have to change to an array so you can take dice out of the meld
 
     static boolean checkFarkle(ArrayList<Integer> hand) {
         ArrayList<Integer> check = new ArrayList<>();
@@ -191,10 +191,9 @@ public class Farkle {
     }
     
     static void roll(ArrayList<Integer> hand, int dieLeft){
-        for (int i =0; i <dieLeft/2; i++){
+        for (int i =0; i <dieLeft; i++){
             //hand.add((int)(Math.random() * 6) + 1);
-            hand.add(1);
-            hand.add(2);
+            hand.add(5);
 
         }
 
@@ -217,7 +216,7 @@ public class Farkle {
         "(C)    " + handDisplay.get(2) + "   |\n" +      
         "(D)    " + handDisplay.get(3) + "   |\n" +      
         "(E)    " + handDisplay.get(4) + "   |\n" +
-        "(F)       |");
+        "(F)        |");
             case 4 ->
                 System.out.println(
         "(A)    " + handDisplay.get(0) + "   |    " + meldDisplay.get(0) + "\n" +      
@@ -276,7 +275,7 @@ public class Farkle {
         "(K) Bank Meld & End Round\n" +
         "(Q) Quit game\n\n" +
 
-        "Enter letters for your choice(s)");
+        "Enter letters for your choice(s) in the format A B C");
     }
 
     static int sixCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
@@ -327,14 +326,14 @@ public class Farkle {
                 case -1 -> {
                     return 0;
                 }
-                case 0 -> {//for straight 
+                case 1 -> {//for straight 
                     score+=1000;
                     if(!isMeldDisplay){
                         meldDisplay.addAll(meld);
                         meld.clear();
                     }
                 }
-                case 1 -> { //for 6 ones
+                case 0 -> { //for 6 ones
                     score+=1300;
                     if(!isMeldDisplay){
                         meldDisplay.addAll(meld);
