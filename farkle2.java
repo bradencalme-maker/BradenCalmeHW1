@@ -3,21 +3,17 @@ import java.util.Scanner;
 public class farkle2 {
 
 
-    static int[] sort(int[] dice){
+    static void roll(int[] dice, int[] diceNumberCount){
         for (int i = 0; i < 6; i++){
             dice[i] = (int)(Math.random()*6 +1);
         }
-        return dice;
+        for(int i = 0; i < 6; i++){
+        diceNumberCount[dice[i]]++;
+    }
     }
 
-    static int[] roll(int[] dice){
-        return dice;
-    }
-    public static void main(String[] args){
-        int dice[] = new int[6];
-        roll(dice);
-
-    for (int i = 0; i < 6-1; i++){
+    static void sort(int[] dice){
+        for (int i = 0; i < 6-1; i++){
         for(int j = 0; j < 6-i-1;j++){
             if (dice[j] > dice[j+1]){
                 int temp = dice[j];
@@ -26,59 +22,35 @@ public class farkle2 {
             }
         }
     }
-
-    System.out.print("Hand: ");
-    for (int i =0; i < 6; i++){
-        System.out.print(dice[i]+" ");
-    }
-    System.out.print("\n");
-
-    int[] diceNumberCount = {0,0,0,0,0,0,0};
-    for(int i = 0; i < 6; i++){
-        diceNumberCount[dice[i]]++;
     }
 
-    System.out.print("Quantity of each die value: ");
-    for (int i =1; i < 7; i++){
-        System.out.print(diceNumberCount[i]+" ");
-    }
-    System.out.print("\n");
+    static boolean checksIfFarkled(int[] diceNumberCount){
+        boolean isFarkle = true;
 
-
-    boolean isFarkle = true;
-
-    if(diceNumberCount[1] != 0 || diceNumberCount[5] != 0){
-        isFarkle = false;
-    }
-
-    for(int i = 2; i < 7; i++){
-        if(diceNumberCount[i] >=3){
+        if(diceNumberCount[1] != 0 || diceNumberCount[5] != 0){
             isFarkle = false;
         }
-    }
 
-    int pairCount = 0;
-    for(int i = 1; i < 7; i++){
-        if(diceNumberCount[i] == 2){
-            pairCount++;
+        for(int i = 2; i < 7; i++){
+            if(diceNumberCount[i] >=3){
+                isFarkle = false;
+            }
         }
-    }
-    if(pairCount == 3){
-        isFarkle = false;
-    }
 
-    int totalScore = 0;
-    if(isFarkle){
-        System.out.println("Farkle! Points: 0");
-    }else{
-        String userInput = "";
-        int meldScore = 0;
-        int[] meld = {0,0,0,0,0,0};
-        boolean done = false;
-
-        while(!done){
-
-            System.out.print("\n");
+        int pairCount = 0;
+        for(int i = 1; i < 7; i++){
+            if(diceNumberCount[i] == 2){
+                pairCount++;
+            }
+        }
+        if(pairCount == 3){
+            isFarkle = false;
+        }
+            return isFarkle;
+        }
+    
+    static void print(int[] dice, int[] meld, int meldScore){
+        System.out.print("\n");
             System.out.println("*************************** Current hand and meld *******************\n Die   Hand |   Meld\n------------+---------------");
             for(int i = 0; i < 6;i++){
                 char option = 'A';
@@ -98,10 +70,11 @@ public class farkle2 {
                 System.out.print("\n");
             }
             System.out.println("------------+---------------");
-            boolean isValidMeld = false;
-
-            {
-                meldScore = 0;
+            System.out.print("                Meld Score: " + meldScore + "\n (K) BanK Meld & End Round\n (Q) Quit game\n\nEnter letters for your choice(s): ");
+    }
+    
+    static int calculateMeldScore(int meldScore, int[] meld){
+        meldScore = 0;
                 int meldDiceCount = 0;
                 int[] meldDice = {0,0,0,0,0,0};
                 for(int i = 0; i < 6;i++){
@@ -160,11 +133,10 @@ public class farkle2 {
                         }
                     }
                 }
-            
+        return meldScore;
+    }
 
-            }
-
-            System.out.print("                Meld Score: " + meldScore + "\n (K) BanK Meld & End Round\n (Q) Quit game\n\nEnter letters for your choice(s): ");
+    static int userInput(int[] dice, int[] meld, int meldScore, int totalScore){
             Scanner choice = new Scanner(System.in);
             String userChoice = choice.nextLine().toUpperCase();
             String[] parts = userChoice.split("");
@@ -180,18 +152,62 @@ public class farkle2 {
                         meld[index] = 0;
                     }
                 }else if(letter == 'Q'){
-                    done = true;
-                }else if(letter == 'k'){
-                    done = true;
+                    return -1;
+                }else if(letter == 'K'){
                     totalScore += meldScore;
+                    return totalScore;
                 }
+            }
+        
+        return totalScore;
+    }
+
+    static void takeTurn(){
+        int dice[] = new int[6];
+        int[] diceNumberCount = {0,0,0,0,0,0,0};
+        int meldScore = 0;
+        int[] meld = {0,0,0,0,0,0};
+        int totalScore = 0;
+        roll(dice, diceNumberCount);
+        sort(dice);
+
+    if(checksIfFarkled(diceNumberCount)){
+        System.out.print("Hand: ");
+        for (int i =0; i < 6; i++){
+            System.out.print(dice[i]+" ");
+        }
+        System.out.print("\n");
+
+        System.out.print("Quantity of each die value: ");
+        for (int i =1; i < 7; i++){
+            System.out.print(diceNumberCount[i]+" ");
+        }
+        System.out.print("\n");
+        System.out.println("Farkle! Points: 0");
+    }else{
+        //String userInput = "";
+        boolean done = false;
+
+        while(!done){
+
+            meldScore = calculateMeldScore(meldScore, meld);
+            print(dice, meld, meldScore);
+            //boolean isValidMeld = false;
+            int newScore = userInput(dice, meld, meldScore, totalScore);
+            if(newScore == -1){
+                done = true;
+            }else if(newScore != totalScore){
+                done = true;
+                totalScore = newScore;
             }
 
         }
     }
-
-
     System.out.println("\nRound over. Total score is now: " + totalScore+ "\n");
+    }
+
+    public static void main(String[] args){
+        takeTurn();
 
     }
 };
