@@ -1,6 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
-
 
 
 public class Farkle {
@@ -8,10 +8,10 @@ public class Farkle {
     static int dieLeft = 6;
     static boolean quit = false;
     static boolean bank = false;
-    static ArrayList<Integer> handDisplay = new ArrayList<>(); //have to change to an array
-    static ArrayList<Integer> meldDisplay = new ArrayList<>(); // have to change to an array so you can take dice out of the meld
+    static int[] handDisplay = {0,0,0,0,0,0}; //have to change to an array
+    static int[] meldDisplay = {0,0,0,0,0,0}; // have to change to an array so you can take dice out of the meld
 
-    static boolean checkFarkle(ArrayList<Integer> hand) {
+    static boolean checkFarkle(ArrayList<Integer> hand) { //meld display updated
         ArrayList<Integer> check = new ArrayList<>();
         check.addAll(hand);
         sort(check);
@@ -53,7 +53,8 @@ public class Farkle {
         return meld;
     }
 
-    static int test(ArrayList<Integer> meld, int meldScore, boolean isMeldDisplay){
+    static int test(ArrayList<Integer> meld, int meldScore, boolean isMeldDisplay){ //meld display updated
+            System.out.println("Meld Size in test: " + meld.size());
          switch (meld.size()){
             case 6 ->{
                 int score =sixCombos(meld, isMeldDisplay);
@@ -132,44 +133,73 @@ public class Farkle {
             return meldScore;
     }
 
-    static void getInput(ArrayList<Integer> hand, ArrayList<Integer> meld){
-        ArrayList<Integer> deletes = new ArrayList<>();
+    static void getInput(ArrayList<Integer> hand, ArrayList<Integer> meld){ //meld display updated
         Scanner choice = new Scanner(System.in);
         String userChoice = choice.nextLine().toUpperCase();
         String[] parts = userChoice.split("");
         for (int i = 0; i < parts.length;i++){
             switch(parts[i]){
                 case "A" -> {
-                    meld.add(hand.get(0));
-                    deletes.add(0);
-                    System.out.println("add one" + meld);
-                    dieLeft--;
+                    if(handDisplay[0] != 0){
+                        meld.add(handDisplay[0]);
+                        handDisplay[0] = 0;
+                        System.out.println("add one to meld meld now: " + meld);
+                        dieLeft--;
+                    }else{
+                        handDisplay[0] = meldDisplay[0];
+                        meldDisplay[0] = 0;
+                    }
                 }
                 case "B" -> {
-                    meld.add(hand.get(1));
-                    deletes.add(1);
-                    System.out.println("add two"+ meld);
-                    dieLeft--;
+                    if(handDisplay[1] != 0){
+                        meld.add(handDisplay[1]);
+                        handDisplay[1] = 0;
+                        System.out.println("add another to meld meld now: " + meld);
+                        dieLeft--;
+                    }else{
+                        handDisplay[1] = meldDisplay[1];
+                        meldDisplay[1] = 0;
+                    }
                 }
                 case "C" -> {
-                    meld.add(hand.get(2));
-                    deletes.add(2);
-                    dieLeft--;
+                    if(handDisplay[2] != 0){
+                        meld.add(handDisplay[2]);
+                        handDisplay[2] = 0;
+                        dieLeft--;
+                    }else{
+                        handDisplay[2] = meldDisplay[2];
+                        meldDisplay[2] = 0;
+                    }
                 }
                 case "D" -> {
-                    meld.add(hand.get(3));
-                    deletes.add(3);
-                    dieLeft--;
+                    if(handDisplay[3] != 0){
+                        meld.add(handDisplay[3]);
+                        handDisplay[3] = 0;
+                        dieLeft--;
+                    }else{
+                        handDisplay[3] = meldDisplay[3];
+                        meldDisplay[3] = 0;
+                    }
                 }
                 case "E" -> {
-                    meld.add(hand.get(4));
-                    deletes.add(4);
-                    dieLeft--;
+                    if(handDisplay[4] != 0){
+                        meld.add(handDisplay[4]);
+                        handDisplay[4] = 0;
+                        dieLeft--;
+                    }else{
+                        handDisplay[4] = meldDisplay[4];
+                        meldDisplay[4] = 0;
+                    }
                 }
                 case "F" -> {
-                    meld.add(hand.get(5));
-                    deletes.add(5);
-                    dieLeft--;
+                    if(handDisplay[5] != 0){
+                        meld.add(handDisplay[5]);
+                        handDisplay[5] = 0;
+                        dieLeft--;
+                    }else{
+                        handDisplay[5] = meldDisplay[5];
+                        meldDisplay[5] = 0;
+                    }
                 }
                 case "Q" ->{
                     quit = true;
@@ -179,95 +209,52 @@ public class Farkle {
                 }
             }
         }
-        for (int i = deletes.size()-1; i>=0;i--){
-            hand.remove(deletes.get(i).intValue());
-        }
-
-        System.out.println(meld + " " + deletes);
-        handDisplay.clear();
-        handDisplay.addAll(hand);
-        deletes.clear();
-        meld = sort(meld);
     }
     
-    static void roll(ArrayList<Integer> hand, int dieLeft){
+    static void roll(ArrayList<Integer> hand, int dieLeft){ //meld Display updated
         for (int i =0; i <dieLeft; i++){
             //hand.add((int)(Math.random() * 6) + 1);
             hand.add(5);
-
         }
 
     }
 
-    static void activeHand(int dieLeft, ArrayList<Integer> hand, ArrayList<Integer> meld){
-        switch (dieLeft){
-            case 6 ->
-                System.out.println(
-        "(A)    " + handDisplay.get(0) + "   |\n" +      
-        "(B)    " + handDisplay.get(1) + "   |\n" +   
-        "(C)    " + handDisplay.get(2) + "   |\n" +      
-        "(D)    " + handDisplay.get(3) + "   |\n" +      
-        "(E)    " + handDisplay.get(4) + "   |\n" +      
-        "(F)    " + handDisplay.get(5) + "   |");
-            case 5 ->
-                System.out.println(
-        "(A)    " + handDisplay.get(0) + "   |    " + meldDisplay.get(0) + "\n" +      
-        "(B)    " + handDisplay.get(1) + "   |\n" +   
-        "(C)    " + handDisplay.get(2) + "   |\n" +      
-        "(D)    " + handDisplay.get(3) + "   |\n" +      
-        "(E)    " + handDisplay.get(4) + "   |\n" +
-        "(F)        |");
-            case 4 ->
-                System.out.println(
-        "(A)    " + handDisplay.get(0) + "   |    " + meldDisplay.get(0) + "\n" +      
-        "(B)    " + handDisplay.get(1) + "   |    " + meldDisplay.get(1) + "\n" +   
-        "(C)    " + handDisplay.get(2) + "   |\n" +      
-        "(D)    " + handDisplay.get(3) + "   |\n"+      
-        "(E)        |\n" +      
-        "(F)        |");
-            case 3 ->
-                System.out.println(
-        "(A)    " + handDisplay.get(0) + "   |    " + meldDisplay.get(0) + "\n" +      
-        "(B)    " + handDisplay.get(1) + "   |    " + meldDisplay.get(1) + "\n" +   
-        "(C)    " + handDisplay.get(2) + "   |    " + meldDisplay.get(2) + "\n"+      
-        "(D)        |\n" +      
-        "(E)        |\n" +      
-        "(F)        |");
-            case 2 ->{
-                System.out.println(
-        "(A)    " + handDisplay.get(0) + "   |    " + meldDisplay.get(0) + "\n" +      
-        "(B)    " + handDisplay.get(1) + "   |    " + meldDisplay.get(1) + "\n" +   
-        "(C)        |    " + meldDisplay.get(2) + "\n"+      
-        "(D)        |    " + meldDisplay.get(3) + "\n"+      
-        "(E)        |\n" +      
-        "(F)        |");
-            }
-            case 1 ->
-                System.out.println(
-        "(A)    " + handDisplay.get(0) + "   |    " + meldDisplay.get(0) + "\n" +      
-        "(B)        |    " + meldDisplay.get(1) + "\n" +   
-        "(C)        |    " + meldDisplay.get(2) + "\n"+      
-        "(D)        |    " + meldDisplay.get(3) + "\n"+      
-        "(E)        |    " + meldDisplay.get(4) + "\n"+    
-        "(F)        |");
-            case 0 ->
-                System.out.println(
-        "(A)        |    " + meldDisplay.get(0) + "\n" +      
-        "(B)        |    " + meldDisplay.get(1) + "\n" +   
-        "(C)        |    " + meldDisplay.get(2) + "\n"+      
-        "(D)        |    " + meldDisplay.get(3) + "\n"+      
-        "(E)        |    " + meldDisplay.get(4) + "\n"+    
-        "(F)        |    " + meldDisplay.get(5));
-
-        }
-    }
-
-    static void menuDisplay(int dieLeft, ArrayList<Integer> hand, ArrayList<Integer> meld,int meldScore){
+    static void menuDisplay(int meldScore){ //updated meld display
         System.out.println(
         "*************************** Current hand and meld *******************\n" +
         "Die   Hand |   Meld" +
         "\n------------+---------------");
-        activeHand(dieLeft, hand, meld);
+        //activeHand(dieLeft, hand, meld);
+        if(meldDisplay[0] == 0){
+            System.out.println("(A)    " + handDisplay[0] + "   |");
+        }else{
+            System.out.println("(A)        |    " + meldDisplay[0]);
+        }
+                if(meldDisplay[1] == 0){
+            System.out.println("(B)    " + handDisplay[1] + "   |");
+        }else{
+            System.out.println("(B)        |    " + meldDisplay[1]);
+        }
+                if(meldDisplay[2] == 0){
+            System.out.println("(C)    " + handDisplay[2] + "   |");
+        }else{
+            System.out.println("(C)        |    " + meldDisplay[2]);
+        }
+                if(meldDisplay[3] == 0){
+            System.out.println("(D)    " + handDisplay[3] + "   |");
+        }else{
+            System.out.println("(D)        |    " + meldDisplay[3]);
+        }
+                if(meldDisplay[4] == 0){
+            System.out.println("(E)    " + handDisplay[4] + "   |");
+        }else{
+            System.out.println("(E)        |    " + meldDisplay[4]);
+        }
+                if(meldDisplay[5] == 0){
+            System.out.println("(F)    " + handDisplay[5] + "   |");
+        }else{
+            System.out.println("(F)        |    " + meldDisplay[5]);
+        }
         System.out.println(  
         "------------+---------------\n" +
         "              Meld Score: "+ meldScore +"\n\n" +
@@ -278,8 +265,10 @@ public class Farkle {
         "Enter letters for your choice(s):");
     }
 
-    static int sixCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
+    static int sixCombos(ArrayList<Integer> meld, boolean isMeldDisplay){ // does not work
         System.out.println("sixCombos");
+        ArrayList<Integer> temp = new ArrayList<>(meld);
+        sort(temp);
         int goodHands[] [] = {{1,1,1,1,1,1},
                               {1,2,3,4,5,6},
                               {1,1,2,2,3,3},
@@ -312,8 +301,8 @@ public class Farkle {
             int score = 0;
             for (int i = 0; i < goodHands.length; i++){
                 numberCorrect = 0;
-                for (int j = 0; j < 6; j++){
-                    if (meld.get(j) == goodHands[i][j]){
+                for (int j = 0; j < 6; j--){
+                    if (temp.get(j) == goodHands[i][j]){
                         numberCorrect++;
                     }
                 }
@@ -328,31 +317,59 @@ public class Farkle {
                 }
                 case 1 -> {//for straight 
                     score+=1000;
-                    if(!isMeldDisplay){
-                        meldDisplay.addAll(meld);
-                        meld.clear();
+                            if(!isMeldDisplay){
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
                     }
+                }
                 }
                 case 0 -> { //for 6 ones
                     score+=1300;
-                    if(!isMeldDisplay){
-                        meldDisplay.addAll(meld);
-                        meld.clear();
+                            if(!isMeldDisplay){
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
                     }
+                }
                 }
                 case 21,22,23,24,25 ->{
                     score+= (100*meld.get(1) + 300*meld.get(1));
-                    if(!isMeldDisplay){
-                        meldDisplay.addAll(meld);
-                        meld.clear();
+                            if(!isMeldDisplay){
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
                     }
+                }
                 }
                 default -> { //for three pair
                     score+=750;
-                    if(!isMeldDisplay){
-                        meldDisplay.addAll(meld);
-                        meld.clear();
+                            if(!isMeldDisplay){
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
                     }
+                }
                 }
             }
         return score;
@@ -362,16 +379,25 @@ public class Farkle {
     static int fiveCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("fiveCombos");
         int score = 0;
+        ArrayList<Integer> temp = new ArrayList<>(meld);
+        sort(temp);
         for (int i =0; i < meld.size()-4; i++){
-                if(meld.get(i) == meld.get(i+1) && meld.get(i) == meld.get(i+2) && meld.get(i) == meld.get(i+3) && meld.get(i+4) == meld.get(i)){
-                    if(meld.get(i) == 1){
+                if(temp.get(i) == temp.get(i+1) && temp.get(i) == temp.get(i+2) && temp.get(i) == temp.get(i+3) && temp.get(i+4) == temp.get(i)){
+                    if(temp.get(i) == 1){
                         score+=1200;
                     }else{
-                        score+=(3*(meld.get(i)*100));
+                        score+=(3*(temp.get(i)*100));
                     }
-                if(!isMeldDisplay){
-                    meldDisplay.addAll(meld);
-                    meld.remove(i+4); meld.remove(i+3); meld.remove(i+2); meld.remove(i+1); meld.remove(i);
+                            if(!isMeldDisplay){
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
+                    }
                 }
                 }
         }
@@ -381,16 +407,25 @@ public class Farkle {
     static int fourCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("fourCombos");
         int score = 0;
+        ArrayList<Integer> temp = new ArrayList<>(meld);
+        sort(temp);
         for (int i =0; i < meld.size()-3; i++)
-        if(meld.get(i) == meld.get(i+1) && meld.get(i) == meld.get(i+2) && meld.get(i+3) == meld.get(i)){
-            if(meld.get(i) == 1){
+        if(temp.get(i) == temp.get(i+1) && temp.get(i) == temp.get(i+2) && temp.get(i+3) == temp.get(i)){
+            if(temp.get(i) == 1){
                     score+=1100;
                 }else{
-                    score+=(2*(meld.get(i)*100));
+                    score+=(2*(temp.get(i)*100));
                 }
-                if(!isMeldDisplay){
-                    meldDisplay.addAll(meld);
-                    meld.remove(i+3); meld.remove(i+2); meld.remove(i+1); meld.remove(i);
+                            if(!isMeldDisplay){
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
+                    }
                 }
         }
         return score;
@@ -399,17 +434,26 @@ public class Farkle {
     static int threeCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("threeCombos "+ meld);
         int score = 0;
-        System.out.println(meld.size());
+        ArrayList<Integer> temp = new ArrayList<>(meld);
+        sort(temp);
+        System.out.println("meld size when in three combos before running anything: " + meld.size());
         for (int i =0; i < meld.size()-2; i++)
-            if(meld.get(i) == meld.get(i+1) && meld.get(i) == meld.get(i+2)){
-                if(meld.get(i) == 1){
+            if(temp.get(i) == temp.get(i+1) && temp.get(i) == temp.get(i+2)){
+                if(temp.get(i) == 1){
                     score+=1000;
                 }else{
-                    score+=(meld.get(i)*100);
+                    score+=(temp.get(i)*100);
                 }
-                if(!isMeldDisplay){
-                    meldDisplay.addAll(meld);
-                    meld.remove(i+2); meld.remove(i+1); meld.remove(i);
+                            if(!isMeldDisplay){
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
+                    }
                 }
             }
         return score;
@@ -420,10 +464,12 @@ public class Farkle {
         int score = 0;
         int possibleScore = 0 ;
         int validValues = 0;
+        ArrayList<Integer> temp = new ArrayList<>(meld);
+        sort(temp);
         for (int i = 0; i <meld.size(); i++){
-            if (meld.get(i) == 1 || meld.get(i) == 5){
+            if (temp.get(i) == 1 || temp.get(i) == 5){
                 validValues++;
-                if (meld.get(i) == 1){
+                if (temp.get(i) == 1){
                     possibleScore+=100;
                 }else {
                     possibleScore+=50;
@@ -432,37 +478,61 @@ public class Farkle {
         }
         if (validValues == 2 ){
             score+=possibleScore;
-            if(!isMeldDisplay){
-                meldDisplay.addAll(meld);
-                meld.remove(1); meld.remove(0);
-            }
+                        if(!isMeldDisplay){
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
+                    }
+                }
         }
         return score;
     }
 
     static int oneCombos(ArrayList<Integer> meld, boolean isMeldDisplay){
         System.out.println("oneCombos");
+        System.out.println("meldDisplay in start of ones combos" + meldDisplay);
+        System.out.println("meld in start of ones combos" + meld);
         int score = 0;
-        int possibleScore = 0 ;
-        int validValues = 0;
-        if (meld.get(0) == 1){
+        ArrayList<Integer> temp = new ArrayList<>(meld);
+        sort(temp);
+        if (temp.get(0) == 1){
             score+=100;
-            if(!isMeldDisplay){
-                meldDisplay.addAll(meld);
-                meld.remove(0);
-            }
-
-        }else if (meld.get(0) == 5){
+        System.out.println("1" + meldDisplay);
+                        if(!isMeldDisplay){
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
+                    }
+                }
+        }else if (temp.get(0) == 5){
             score+=50;
+        System.out.println("2" + meldDisplay);
             if(!isMeldDisplay){
-                meldDisplay.addAll(meld);
-                meld.remove(0);
-            }
+                System.out.println(meld);
+                    int num = meld.size() -1;
+                    for (int j = handDisplay.length -1; j >=0;j--){
+                        if (handDisplay[j] == 0 && meldDisplay[j] == 0){
+                            meldDisplay[j] = meld.get(num);
+                            meld.remove(num);
+                            num = meld.size() -1;
+                            System.out.println("3 " + meld);
+                        }
+                    }
+                }
+                    System.out.println(Arrays.toString(meldDisplay));
+                    System.out.println(Arrays.toString(handDisplay));
         } else {
             System.out.println("Invalid Number combos try again");
-            if(!isMeldDisplay){
-                meld.clear();
-            }
         }
         return score;
     }
@@ -470,24 +540,34 @@ public class Farkle {
     public static void main(String[] args){
        ArrayList<Integer> meld = new ArrayList<>();
        ArrayList<Integer> hand = new ArrayList<>();
+       ArrayList<Integer> updateScore = new ArrayList<>();
        int meldScore = 0;
        while(!quit){
         roll(hand,dieLeft);
-        handDisplay.addAll(hand);
+        System.out.println("hand size at start should be 6: " + hand.size());
+        for (int j = hand.size()-1; j >=0;j--){
+                handDisplay[j] = hand.get(j);
+           }
         if (checkFarkle(hand)){
             System.out.println("You farkled");
             quit = true;
             }else{
-        menuDisplay(dieLeft, hand, meld, meldScore);
+        menuDisplay(meldScore);
         getInput(hand, meld);
         while(!bank && !quit){
             test(meld, meldScore, false);
             meldScore = 0;
-            System.out.println(meldDisplay);
-            meldScore = test(meldDisplay, meldScore, true);
-                        System.out.println(meldDisplay);
-
-            menuDisplay(dieLeft, handDisplay, meldDisplay, meldScore);
+            System.out.println("Current meld Display: " + meldDisplay);
+            updateScore.clear();
+            for (int i = 0; i < meldDisplay.length -1;i++){
+                if(!(meldDisplay[i] == 0)){
+                    updateScore.add(meldDisplay[i]);
+                }
+            }
+            System.out.println(updateScore);
+            meldScore = test(updateScore, meldScore, true);
+                        System.out.println("Meld Display after running update score" + meldDisplay);
+            menuDisplay(meldScore);
             getInput(hand,meld);
         }
        }
