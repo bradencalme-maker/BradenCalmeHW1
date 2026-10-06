@@ -48,6 +48,7 @@ public class FarkleGame{
 
             }
         }
+        System.out.println("\nRound over. Total score is now: " + player.getTotalScore()+ "\n");
     }
     
     int userInput(){
@@ -80,8 +81,7 @@ public class FarkleGame{
                     return -1;
                 }else if(letter == 'K'){
                     //bank the current meld score and end the round
-                    player.setTotalScore(player.getTotalScore() + scoreCalculator.getMeldScore());
-                    return player.getTotalScore();
+                    return player.getTotalScore() + scoreCalculator.getMeldScore();
                 }
             }
         
@@ -89,7 +89,7 @@ public class FarkleGame{
     }
     
     void print(){
-        System.out.print("\n");
+        System.out.print(player.getName() +" it is your turn\n");
             System.out.println("*************************** Current hand and meld *******************\n Die   Hand |   Meld\n------------+---------------");
             for(int i = 0; i < 6;i++){
                 char option = 'A';
@@ -116,8 +116,20 @@ public class FarkleGame{
             System.out.print("                Meld Score: " + scoreCalculator.getMeldScore() + "\n (K) BanK Meld & End Round\n (Q) Quit game\n\nEnter letters for your choice(s): ");
     }
 
+    void makePlayers(){
+        System.out.println("Enter your name or press enter to continue");
+        Scanner name = new Scanner(System.in);
+        String newName = name.nextLine();
+        player.setName(newName);
+    }
+    
     public static void main(String[] args){
         FarkleGame game = new FarkleGame();
+        System.out.println("************************************************************************\n"+
+                         "*           Zag Farkle by Braden!                                      *\n"+
+                         "*                      Copyright: 2026                                 *\n" +
+                         "************************************************************************");
+        game.makePlayers();
         game.takeTurn();
     }
 }
