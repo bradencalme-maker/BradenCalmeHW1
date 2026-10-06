@@ -89,6 +89,7 @@ public class ScoreCalculator{
     public void isFarkle(){
         
     }
+    
     public int getMeldScore(){
         return meldScore;
     }
@@ -99,6 +100,17 @@ public class ScoreCalculator{
 
     public int getMeld(int position){
         return meld[position];
+    }
+
+    public void reset(){
+        meldScore = 0;
+        for(int i =0;i<6;i++){
+            meld[i]=0;
+            meldDice[i] = 0;
+            meldDiceCount = 0;
+            meldDiceSizesCount[i] =0;
+        }
+        meldDiceSizesCount[6] = 0;
     }
 }
 

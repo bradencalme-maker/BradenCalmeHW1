@@ -4,6 +4,8 @@ public class FarkleGame{
     Dice dice = new Dice();
     Player player = new Player();
     ScoreCalculator scoreCalculator = new ScoreCalculator();
+    int[] savedMeld = {0,0,0,0,0,0};
+    int savedMeldScore = 0;
     
     void takeTurn(){
 
@@ -40,10 +42,27 @@ public class FarkleGame{
             //a score of -1 indicates that the player choose Q
             if(newScore == -1){
                 done = true;
-            }else if(newScore != player.getTotalScore()){
+            }else if(newScore == -2){
+                for (int i = 0; i < 6; i++){
+                    if (scoreCalculator.getMeld(i) != 0){
+                        for(int j = 0; j < 6; j++){
+                            if(savedMeld[j] == 0){
+                                savedMeld[j] = scoreCalculator.getMeld(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+                savedMeldScore += scoreCalculator.getMeldScore();
+                player.setTotalScore(0);
+                scoreCalculator.reset();
+                dice.reset();
+                dice.roll();
+            }else if(newScore == -3){
                 //A changed score indicates that the player banked the meld
                 done = true;
-                player.setTotalScore(newScore);
+                
+                player.setTotalScore(player.getTotalScore() + scoreCalculator.getMeldScore() + savedMeldScore);
             }
 
             }
@@ -70,18 +89,21 @@ public class FarkleGame{
                     if(dice.getDice(index) != 0){
                         scoreCalculator.setMeld(index, dice.getDice(index));
                         dice.setDice(index, 0);
+                        dice.setDieRemaining(dice.getDieRemaining() - 1);
                     } else{
                         //if already selected move the die back into the hand
                         dice.setDice(index, scoreCalculator.getMeld(index));
                         scoreCalculator.setMeld(index,0);
+                        dice.setDieRemaining(dice.getDieRemaining() + 1);
                     }
-
                 //-1 signals that the player chose to quit
                 }else if(letter == 'Q'){
                     return -1;
                 }else if(letter == 'K'){
                     //bank the current meld score and end the round
-                    return player.getTotalScore() + scoreCalculator.getMeldScore();
+                    return -3;
+                }else if(letter == 'R'){
+                    return -2;
                 }
             }
         
@@ -89,7 +111,13 @@ public class FarkleGame{
     }
     
     void print(){
-        System.out.print(player.getName() +" it is your turn\n");
+        System.out.print(player.getName() +" it is your turn\nCurrent turns saved hand [ ");
+        for(int i = 0; i < 6;i++){
+            if(savedMeld[i] != 0){
+                System.out.print(savedMeld[i] +" ");
+            }
+        }
+        System.out.println("] Possible saved score "+ savedMeldScore);
             System.out.println("*************************** Current hand and meld *******************\n Die   Hand |   Meld\n------------+---------------");
             for(int i = 0; i < 6;i++){
                 char option = 'A';
@@ -113,7 +141,7 @@ public class FarkleGame{
                 System.out.print("\n");
             }
             System.out.println("------------+---------------");
-            System.out.print("                Meld Score: " + scoreCalculator.getMeldScore() + "\n (K) BanK Meld & End Round\n (Q) Quit game\n\nEnter letters for your choice(s): ");
+            System.out.print("                Meld Score: " + scoreCalculator.getMeldScore() + "\n (K) BanK Meld & End Round\n (Q) Quit game\n (R) Roll remaining die\n\nEnter letters for your choice(s): ");
     }
 
     void makePlayers(){
@@ -126,9 +154,9 @@ public class FarkleGame{
     public static void main(String[] args){
         FarkleGame game = new FarkleGame();
         System.out.println("************************************************************************\n"+
-                         "*           Zag Farkle by Braden!                                      *\n"+
-                         "*                      Copyright: 2026                                 *\n" +
-                         "************************************************************************");
+                           "*           Zag Farkle by Braden!                                      *\n"+
+                           "*                      Copyright: 2026                                 *\n" +
+                           "************************************************************************");
         game.makePlayers();
         game.takeTurn();
     }

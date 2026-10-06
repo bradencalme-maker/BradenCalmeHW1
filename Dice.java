@@ -73,4 +73,16 @@ public class Dice{
     public boolean getIsFarkle(){
         return isFarkle;
     }
+
+    public int getDieRemaining(){
+        return dieRemaining;
+    }
+
+    public void reset(){
+        for(int i = 0;i<6;i++){
+            dice[i]=0;
+            diceNumberCount[i] = 0;
+        }
+        diceNumberCount[6] = 0;
+    }
 }
