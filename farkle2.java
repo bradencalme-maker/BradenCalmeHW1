@@ -289,7 +289,7 @@ public class Farkle2 {
 
         //create the initial roll and place the dice in sorted order
         roll(dice, diceNumberCount);
-        sort(dice);
+        //sort(dice);
 
         //imediately end the round if no scoring combos exist
         if(checksIfFarkled(diceNumberCount)){
