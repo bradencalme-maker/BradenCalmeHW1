@@ -4,8 +4,10 @@ public class FarkleGame{
     Dice dice = new Dice();
     Player player = new Player();
     ScoreCalculator scoreCalculator = new ScoreCalculator();
-    int[] savedMeld = {0,0,0,0,0,0};
-    int savedMeldScore = 0;
+    SavedMeld savedMeld = new SavedMeld();
+    // int[] savedMeld = {0,0,0,0,0,0};
+    // int savedMeldScore = 0;
+    // int savedMeldCount = 0;
     
     void takeTurn(){
 
@@ -34,35 +36,67 @@ public class FarkleGame{
         //continue allowing selections until the player quits or banks
         while(!done){
 
+            int newScore;
+            // if (scoreCalculator.getValidMeldDiceCount() == 6){
+            //     System.out.println("***** HOT HAND! ****\n" +
+            //                        "Would you like to roll 6 new dice(R), or bank and end your turn(K)?\n" +
+            //                        "************************");
+            //     savedMeld.hotHand();
+            //     scoreCalculator.setValidMeldDiceCount(0);
+            //     Scanner choice = new Scanner(System.in);
+            //     String userChoice = choice.nextLine().toUpperCase();
+            //     String[] parts = userChoice.split("");
+            //     for(int i = 0; i < parts.length;i++){
+            //     char letter = parts[i].charAt(0);
+            //     if(letter == 'Q'){
+            //         newScore = -1;
+            //     }else if(letter == 'K'){
+            //         //bank the current meld score and end the round
+            //          newScore = -3;
+            //     }else if(letter == 'R'){
+            //         newScore = -2;
+            //     }
+            //     }
+
+            // }else {
+
             scoreCalculator.calculateMeldScore();
             print();
             //boolean isValidMeld = false;
-            int newScore = userInput();
-
+            newScore = userInput();
+            //}
             //a score of -1 indicates that the player choose Q
             if(newScore == -1){
                 done = true;
             }else if(newScore == -2){
-                for (int i = 0; i < 6; i++){
-                    if (scoreCalculator.getMeld(i) != 0){
-                        for(int j = 0; j < 6; j++){
-                            if(savedMeld[j] == 0){
-                                savedMeld[j] = scoreCalculator.getMeld(i);
-                                break;
+                if (scoreCalculator.getMeldScore() > 0){
+                    for (int i = 0; i < 6; i++){
+                        if (scoreCalculator.getMeld(i) != 0){
+                            for(int j = 0; j < 6; j++){
+                                if(savedMeld.getSavedMeld(j) == 0){
+                                    savedMeld.setSavedMeld(j,scoreCalculator.getMeld(i));
+                                    break;
+                                }
                             }
                         }
                     }
+                    savedMeld.setSavedMeldScore(savedMeld.getSavedMeldScore()+scoreCalculator.getMeldScore());
+                    player.setTotalScore(0);
+                    scoreCalculator.reset();
+                    dice.reset();
+                    dice.roll();
+                    if (dice.getIsFarkle()) {
+                        System.out.println("Farkle! You lost your turn's points.");
+                        done = true;
+                    }
+                }else{
+                    System.out.println("Must enter a valid meld to reroll please try again");
                 }
-                savedMeldScore += scoreCalculator.getMeldScore();
-                player.setTotalScore(0);
-                scoreCalculator.reset();
-                dice.reset();
-                dice.roll();
             }else if(newScore == -3){
                 //A changed score indicates that the player banked the meld
                 done = true;
                 
-                player.setTotalScore(player.getTotalScore() + scoreCalculator.getMeldScore() + savedMeldScore);
+                player.setTotalScore(player.getTotalScore() + scoreCalculator.getMeldScore() + savedMeld.getSavedMeldScore());
             }
 
             }
@@ -113,11 +147,11 @@ public class FarkleGame{
     void print(){
         System.out.print(player.getName() +" it is your turn\nCurrent turns saved hand [ ");
         for(int i = 0; i < 6;i++){
-            if(savedMeld[i] != 0){
-                System.out.print(savedMeld[i] +" ");
+            if(savedMeld.getSavedMeld(i) != 0){
+                System.out.print(savedMeld.getSavedMeld(i) +" ");
             }
         }
-        System.out.println("] Possible saved score "+ savedMeldScore);
+        System.out.println("] Possible saved score "+ savedMeld.getSavedMeldScore());
             System.out.println("*************************** Current hand and meld *******************\n Die   Hand |   Meld\n------------+---------------");
             for(int i = 0; i < 6;i++){
                 char option = 'A';
