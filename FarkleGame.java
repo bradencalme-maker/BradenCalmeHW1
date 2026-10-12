@@ -1,19 +1,40 @@
-import java.util.Scanner;
+/**
+ * Runs a console based Farkle turn, including die selection, rerolls, and banking.
+ * CPSC 224 - Software Development
+ * Programming Assignment #2
+ * 
+ * @author Braden Calme
+ * @version 2.0 2026-10-11
+ */
 
+
+import java.util.Scanner;
+/**
+ * Coordinates the player, dice, meld scoring, and console input for a farkle turn.
+ * The player can select dice, roll the remaining dice, or bank the rurns points.
+ * 
+ * @author Braden Calme
+ * @version 2.0 2026-10-11
+ */
 public class FarkleGame{
+    //Dice available for rolling and selection during the turn
     Dice dice = new Dice();
+    //Player whose name and total score are used
     Player player = new Player();
+    //Calculates the current melds score and tracks valid scoring dice
     ScoreCalculator scoreCalculator = new ScoreCalculator();
+    //Stores dice and points saved from ealier rolls in the turn
     SavedMeld savedMeld = new SavedMeld();
-    // int[] savedMeld = {0,0,0,0,0,0};
-    // int savedMeldScore = 0;
-    // int savedMeldCount = 0;
-    
+
+    /**
+     * plays one turn unitil the player quits, pbanks, or rolls a farkle
+     * Rolls the dice, processes player choices and updates the current meld,
+     * saved meld, dice counts, and player score. prints the total score when the turn ends.
+     */
     void takeTurn(){
 
         //create the initial roll
         dice.roll();
-        //sort(dice);
 
         //imediately end the round if no scoring combos exist
         if(dice.getIsFarkle()){
@@ -30,38 +51,16 @@ public class FarkleGame{
             System.out.print("\n");
             System.out.println("Farkle! Points: 0");
     }else{
-        //String userInput = "";
         boolean done = false;
 
         //continue allowing selections until the player quits or banks
         while(!done){
 
+            //Command codes: -1 quirs, -2 rerolls, -3 banks, and -4 rolls a hot hand
             int newScore = -1;
-            // if (scoreCalculator.getValidMeldDiceCount() == 6){
-            //     System.out.println("***** HOT HAND! ****\n" +
-            //                        "Would you like to roll 6 new dice(R), or bank and end your turn(K)?\n" +
-            //                        "************************");
-            //     savedMeld.hotHand();
-            //     scoreCalculator.setValidMeldDiceCount(0);
-            //     Scanner choice = new Scanner(System.in);
-            //     String userChoice = choice.nextLine().toUpperCase();
-            //     String[] parts = userChoice.split("");
-            //     for(int i = 0; i < parts.length;i++){
-            //     char letter = parts[i].charAt(0);
-            //     if(letter == 'Q'){
-            //         newScore = -1;
-            //     }else if(letter == 'K'){
-            //         //bank the current meld score and end the round
-            //          newScore = -3;
-            //     }else if(letter == 'R'){
-            //         newScore = -2;
-            //     }
-            //     }
-
-            // }else {
-
             scoreCalculator.calculateMeldScore();
             System.out.println("Currnet: "+ scoreCalculator.getCurrentValidMeldDiceCount() + " Total: "+ scoreCalculator.getValidMeldDiceCount());
+            //  hot hand occurs when all six dice are part of valid scoring melds
             if (scoreCalculator.getCurrentValidMeldDiceCount() + scoreCalculator.getValidMeldDiceCount() == 6){
                 System.out.println("***** HOT HAND! ****\n" +
                                    "Would you like to roll 6 new dice(R), or bank and end your turn(K)?\n" +
@@ -86,7 +85,6 @@ public class FarkleGame{
 
             }else {
             print();
-            //boolean isValidMeld = false;
             newScore = userInput();
             }
             //a score of -1 indicates that the player choose Q
@@ -140,6 +138,12 @@ public class FarkleGame{
         System.out.println("\nRound over. Total score is now: " + player.getTotalScore()+ "\n");
     }
     
+    /**
+     * Reads one line of input and processes each entered choice in order.
+     * Letters A-F move dice betweeen the hand and meld and update the remaining dice count. A q, k, or R command returns immeditaely to the turn handler.
+     * 
+     * #return -1 to quit, -3 to bank, or -2 to reroll; otherwise, the players current total score after processing die selections
+     */
     int userInput(){
 
             //converts input to uppercase lowercase and uppercase input work
@@ -180,6 +184,11 @@ public class FarkleGame{
         return player.getTotalScore();
     }
     
+    /**
+     * Prints the players saved hand, current hand, meld, and availavle commands.
+     * Displays nonzero dice in their corresponding positions and prints the 
+     * current and saved scores wihtout changing the game state
+     */
     void print(){
         System.out.print(player.getName() +" it is your turn\nCurrent turns saved hand [ ");
         for(int i = 0; i < 6;i++){
@@ -215,6 +224,10 @@ public class FarkleGame{
             System.out.print("                Meld Score: " + scoreCalculator.getMeldScore() + "\n (K) BanK Meld & End Round\n (Q) Quit game\n (R) Roll remaining die\n\nEnter letters for your choice(s): ");
     }
 
+    /**
+     * Prompts for the players name and stores the entered text in the player.
+     * An empty input line is passed to the player object unchanged
+     */
     void makePlayers(){
         System.out.println("Enter your name or press enter to continue");
         Scanner name = new Scanner(System.in);
@@ -222,6 +235,10 @@ public class FarkleGame{
         player.setName(newName);
     }
     
+    /**
+     * Starts the console game and plays one farkle turn.
+     * Prints the welcome banner, requests the payers name and starts play
+     */
     public static void main(String[] args){
         FarkleGame game = new FarkleGame();
         System.out.println("************************************************************************\n"+
