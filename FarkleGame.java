@@ -36,7 +36,7 @@ public class FarkleGame{
         //continue allowing selections until the player quits or banks
         while(!done){
 
-            int newScore;
+            int newScore = -1;
             // if (scoreCalculator.getValidMeldDiceCount() == 6){
             //     System.out.println("***** HOT HAND! ****\n" +
             //                        "Would you like to roll 6 new dice(R), or bank and end your turn(K)?\n" +
@@ -61,14 +61,40 @@ public class FarkleGame{
             // }else {
 
             scoreCalculator.calculateMeldScore();
+            System.out.println("Currnet: "+ scoreCalculator.getCurrentValidMeldDiceCount() + " Total: "+ scoreCalculator.getValidMeldDiceCount());
+            if (scoreCalculator.getCurrentValidMeldDiceCount() + scoreCalculator.getValidMeldDiceCount() == 6){
+                System.out.println("***** HOT HAND! ****\n" +
+                                   "Would you like to roll 6 new dice(R), or bank and end your turn(K)?\n" +
+                                   "************************");
+                savedMeld.hotHand();
+                dice.setDieRemaining(6);
+                scoreCalculator.setValidMeldDiceCount(0);
+                Scanner choice = new Scanner(System.in);
+                String userChoice = choice.nextLine().toUpperCase();
+                String[] parts = userChoice.split("");
+                for(int i = 0; i < parts.length;i++){
+                char letter = parts[i].charAt(0);
+                if(letter == 'Q'){
+                    newScore = -1;
+                }else if(letter == 'K'){
+                    //bank the current meld score and end the round
+                     newScore = -3;
+                }else if(letter == 'R'){
+                    newScore = -4;
+                }
+                }
+
+            }else {
             print();
             //boolean isValidMeld = false;
             newScore = userInput();
-            //}
+            }
             //a score of -1 indicates that the player choose Q
             if(newScore == -1){
                 done = true;
             }else if(newScore == -2){
+                System.out.println("inside else if should take next turn with 6 new dice");
+                scoreCalculator.setValidMeldDiceCount(scoreCalculator.getValidMeldDiceCount() +scoreCalculator.getCurrentValidMeldDiceCount());
                 if (scoreCalculator.getMeldScore() > 0){
                     for (int i = 0; i < 6; i++){
                         if (scoreCalculator.getMeld(i) != 0){
@@ -97,7 +123,17 @@ public class FarkleGame{
                 done = true;
                 
                 player.setTotalScore(player.getTotalScore() + scoreCalculator.getMeldScore() + savedMeld.getSavedMeldScore());
-            }
+            }else if(newScore == -4){
+                    savedMeld.setSavedMeldScore(savedMeld.getSavedMeldScore()+scoreCalculator.getMeldScore());
+                    player.setTotalScore(0);
+                    scoreCalculator.reset();
+                    dice.reset();
+                    dice.roll();
+                    if (dice.getIsFarkle()) {
+                        System.out.println("Farkle! You lost your turn's points.");
+                        done = true;
+                    }
+                }
 
             }
         }
@@ -152,6 +188,7 @@ public class FarkleGame{
             }
         }
         System.out.println("] Possible saved score "+ savedMeld.getSavedMeldScore());
+        System.out.println("ValidMeldDiceCount: " + scoreCalculator.getValidMeldDiceCount());
             System.out.println("*************************** Current hand and meld *******************\n Die   Hand |   Meld\n------------+---------------");
             for(int i = 0; i < 6;i++){
                 char option = 'A';
