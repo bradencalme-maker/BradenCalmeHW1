@@ -59,7 +59,6 @@ public class FarkleGame{
             //Command codes: -1 quirs, -2 rerolls, -3 banks, and -4 rolls a hot hand
             int newScore = -1;
             scoreCalculator.calculateMeldScore();
-            System.out.println("Currnet: "+ scoreCalculator.getCurrentValidMeldDiceCount() + " Total: "+ scoreCalculator.getValidMeldDiceCount());
             //  hot hand occurs when all six dice are part of valid scoring melds
             if (scoreCalculator.getCurrentValidMeldDiceCount() + scoreCalculator.getValidMeldDiceCount() == 6){
                 System.out.println("***** HOT HAND! ****\n" +
@@ -197,7 +196,6 @@ public class FarkleGame{
             }
         }
         System.out.println("] Possible saved score "+ savedMeld.getSavedMeldScore());
-        System.out.println("ValidMeldDiceCount: " + scoreCalculator.getValidMeldDiceCount());
             System.out.println("*************************** Current hand and meld *******************\n Die   Hand |   Meld\n------------+---------------");
             for(int i = 0; i < 6;i++){
                 char option = 'A';
