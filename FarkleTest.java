@@ -1,10 +1,10 @@
 /*
  * Tests scoring combinations, player naming, and Farkle detection.
  * CPSC 224 - Software Development
- * Programming Assignment #2
+ * Programming Assignment #3
  *
  * @author Braden Calme
- * @version 1.0 2026-10-11
+ * @version 1.0 2026-11-08
  */
 
 

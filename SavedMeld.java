@@ -2,10 +2,10 @@
  * Stores saved dice their score and a separately tracked dice count in farkle.
  * 
  * CPSC 224 - Software Development
- * Programming Assignment #2
+ * Programming Assignment #3
  * 
  * @author Braden Calme
- * @version 1.0 2026-10-11
+ * @version 1.0 2026-11-08
  */
 
 public class SavedMeld{

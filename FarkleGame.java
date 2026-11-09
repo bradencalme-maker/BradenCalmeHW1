@@ -1,10 +1,10 @@
 /**
- * Runs a console based Farkle turn, including die selection, rerolls, and banking.
+ * Runs a console based Farkle game, including die selection, rerolls, and banking.
  * CPSC 224 - Software Development
- * Programming Assignment #2
+ * Programming Assignment #3
  * 
  * @author Braden Calme
- * @version 2.0 2026-10-11
+ * @version 2.0 2026-11-8
  */
 
 

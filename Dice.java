@@ -4,10 +4,10 @@
  * or resettin the stored dice values
  * 
  * CPSC 224 - Software Development
- * Programming Assignment #2
+ * Programming Assignment #3
  * 
  * @author Braden Calme
- * @version 1.0 2026-10-11
+ * @version 1.0 2026-11-08
  */
 public class Dice{
     //Number of dice positions to fill during the next roll initially six

@@ -3,10 +3,10 @@
  * Tracks the selected dice, their fave value frequencies and scoring dice counts.
  * 
  * CPSC 224 - Software Development
- * Programming Assignment #2
+ * Programming Assignment #3
  * 
  * @author Braden Calme
- * @version 1.0 2026-10-11
+ * @version 1.0 2026-11-08
  */
 public class ScoreCalculator{
     //Score produced by the most recent calculation or zero after a reset
