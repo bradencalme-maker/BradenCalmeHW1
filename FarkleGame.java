@@ -19,23 +19,24 @@ import java.util.Scanner;
 public class FarkleGame{
     //Dice available for rolling and selection during the turn
     Dice dice = new Dice();
-    //Player whose name and total score are used
-    Player player = new Player();
+
     //Calculates the current melds score and tracks valid scoring dice
     ScoreCalculator scoreCalculator = new ScoreCalculator();
     //Stores dice and points saved from ealier rolls in the turn
     SavedMeld savedMeld = new SavedMeld();
 
-    boolean quit = false;
-
+    static boolean quit = false;
+    static int playerNum = 1;
     int neededPoints = 10000;
+    static Player[] players = new Player[10];
+    String[] names = {"Bob", "Joe", "Sam", "Phoebe", "Bo", "Nix", "Micah", "Harry", "Call", "Gavin"};
 
     /**
      * plays one turn unitil the player quits, pbanks, or rolls a farkle
      * Rolls the dice, processes player choices and updates the current meld,
      * saved meld, dice counts, and player score. prints the total score when the turn ends.
      */
-    void takeTurn(){
+    void takeTurn(Player player){
 
         //create the initial roll
         dice.roll();
@@ -87,8 +88,8 @@ public class FarkleGame{
                 }
 
             }else {
-            print();
-            newScore = userInput();
+            print(player);
+            newScore = userInput(player);
             }
             //a score of -1 indicates that the player choose Q
             if(newScore == -1){
@@ -138,7 +139,7 @@ public class FarkleGame{
 
             }
         }
-        System.out.println("\nRound over. Total score is now: " + player.getTotalScore()+ "\n");
+        //System.out.println("\nRound over. Total score is now: " + player.getTotalScore()+ "\n");
     }
     
     /**
@@ -147,7 +148,7 @@ public class FarkleGame{
      * 
      * #return -1 to quit, -3 to bank, or -2 to reroll; otherwise, the players current total score after processing die selections
      */
-    int userInput(){
+    int userInput(Player player){
 
             //converts input to uppercase lowercase and uppercase input work
             Scanner choice = new Scanner(System.in);
@@ -192,7 +193,7 @@ public class FarkleGame{
      * Displays nonzero dice in their corresponding positions and prints the 
      * current and saved scores wihtout changing the game state
      */
-    void print(){
+    void print(Player player){
         System.out.print(player.getName() +" it is your turn\nCurrent turns saved hand [ ");
         for(int i = 0; i < 6;i++){
             if(savedMeld.getSavedMeld(i) != 0){
@@ -231,10 +232,36 @@ public class FarkleGame{
      * An empty input line is passed to the player object unchanged
      */
     void makePlayers(){
-        System.out.println("What is the player#1's name? [Unknown Player]");
-        Scanner name = new Scanner(System.in);
-        String newName = name.nextLine();
-        player.setName(newName);
+        System.out.println("How many players are going to be playing? [1]");
+        Scanner numPlayers = new Scanner(System.in);
+        String num = numPlayers.nextLine();
+        
+        if(num.isEmpty()){
+            players[0] = new Player();
+            System.out.println("What is the player#1's name? [Unknown Player]");
+            Scanner name = new Scanner(System.in);
+            String newName = name.nextLine();
+            if(!newName.isEmpty()){
+                players[0].setName(newName);
+            }else{
+                players[0].setName(names[0]);
+            }
+        }else{
+            int number = Integer.parseInt(num);
+            playerNum = number;
+            for (int i = 0; i < number; i++){
+                players[i] = new Player();
+                System.out.println("What is the player#"+i+"'s name? ["+ names[i] +"]");
+                Scanner name = new Scanner(System.in);
+                String newName = name.nextLine();
+                if(!newName.isEmpty()){
+                    players[i].setName(newName);
+                }else{
+                    players[i].setName(names[i]);
+                }
+            }
+        }
+        
     }
 
     void endPoints(){
@@ -246,12 +273,21 @@ public class FarkleGame{
         }
     }
 
-    boolean checkIfGameOver(){
+    boolean checkIfGameOver(Player player){
         if (player.getTotalScore() < neededPoints || quit){
             return true;
         }else {return false;}
     }
     
+    void printScores(){
+        System.out.println("Current total points:");
+        for(int i = 0; i < playerNum; i++){
+            System.out.println("\t"+ names[i] + ": "+players[i].getTotalScore());
+        }
+    }
+    void winnerScreen(){
+        
+    }
     void reset(){
         dice.fullReset();
         scoreCalculator.reset();
@@ -270,8 +306,11 @@ public class FarkleGame{
                            "How many points would you like to play in this game? [10000]");
         game.endPoints();
         game.makePlayers();
-        while(game.checkIfGameOver()){
-            game.takeTurn();
+        int count = 0;
+        while(game.checkIfGameOver(players[count])){
+            game.takeTurn(players[count]);
+            game.printScores();
+            count = (count + 1) % playerNum;
             game.reset();
         }
     }
