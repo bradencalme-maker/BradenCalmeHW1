@@ -67,6 +67,17 @@ public class FarkleTest{
         return false;
     }
 
+    public static boolean testFullHouse(){
+        ScoreCalculator calculator = createMeld(1,1,1,2,3,3);
+        
+        calculator.calculateMeldScore();
+
+        if (calculator.getMeldScore() == 1500){
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * Checks that a single selected one scores 100 points.
@@ -144,6 +155,8 @@ public class FarkleTest{
         System.out.println("Test single one: " + testSingleOne());
         System.out.println("Test player name: " + testPlayerName());
         System.out.println("Test farkle: " + testFarkle());
+        System.out.println("Test Full House: " + testFullHouse());
+
     }
 
 
