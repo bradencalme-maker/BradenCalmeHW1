@@ -109,7 +109,7 @@ public class FarkleGame{
                         }
                     }
                     savedMeld.setSavedMeldScore(savedMeld.getSavedMeldScore()+scoreCalculator.getMeldScore());
-                    player.setTotalScore(0);
+                    //player.setTotalScore(0);
                     scoreCalculator.reset();
                     dice.reset();
                     dice.roll();
@@ -127,7 +127,7 @@ public class FarkleGame{
                 player.setTotalScore(player.getTotalScore() + scoreCalculator.getMeldScore() + savedMeld.getSavedMeldScore());
             }else if(newScore == -4){
                     savedMeld.setSavedMeldScore(savedMeld.getSavedMeldScore()+scoreCalculator.getMeldScore());
-                    player.setTotalScore(0);
+                    //player.setTotalScore(0);
                     scoreCalculator.reset();
                     dice.reset();
                     dice.roll();
@@ -286,7 +286,18 @@ public class FarkleGame{
         }
     }
     void winnerScreen(){
-        
+        int highestScorer = 0;
+        for(int i = 0; i < playerNum; i++){
+            if(players[i].getTotalScore() > players[highestScorer].getTotalScore()){
+                highestScorer = i;
+            }
+        }
+        System.out.println(players[highestScorer].getName() + " has won with a score of: " + players[highestScorer].getTotalScore());
+        for (int i = 0; i < playerNum; i++){
+            if(i != highestScorer){
+                System.out.println(players[i].getName() + ": " + players[i].getTotalScore());
+            }
+        }
     }
     void reset(){
         dice.fullReset();
@@ -306,12 +317,26 @@ public class FarkleGame{
                            "How many points would you like to play in this game? [10000]");
         game.endPoints();
         game.makePlayers();
-        int count = 0;
-        while(game.checkIfGameOver(players[count])){
+        int count = -1;
+        boolean first = true;
+        while(first || game.checkIfGameOver(players[count])){
+            first = false;
+            count = (count + 1) % playerNum;
             game.takeTurn(players[count]);
             game.printScores();
-            count = (count + 1) % playerNum;
             game.reset();
+        }
+        if(quit){
+            game.winnerScreen();
+        }else{
+            System.out.println(players[count].getName() +" has beat the point goal. You have one final chance to beat their score of " + players[count].getTotalScore());
+            count = (count + 1) % playerNum;
+            for(int i = 0; i < playerNum -1;i++){
+                game.takeTurn(players[count]);
+                game.printScores();
+                count = (count + 1) % playerNum;
+            }
+            game.winnerScreen();
         }
     }
 }
