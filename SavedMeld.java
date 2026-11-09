@@ -87,5 +87,12 @@ public class SavedMeld{
         }
     }
 
+    public void reset(){
+        for (int i = 0; i < 6; i++){
+            savedMeld[i] = 0;
+        }
+        savedMeldScore =0;
+        savedMeldCount = 0;
+    }
 
 }

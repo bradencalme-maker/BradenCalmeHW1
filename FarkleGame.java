@@ -26,6 +26,10 @@ public class FarkleGame{
     //Stores dice and points saved from ealier rolls in the turn
     SavedMeld savedMeld = new SavedMeld();
 
+    boolean quit = false;
+
+    int neededPoints = 10000;
+
     /**
      * plays one turn unitil the player quits, pbanks, or rolls a farkle
      * Rolls the dice, processes player choices and updates the current meld,
@@ -89,8 +93,8 @@ public class FarkleGame{
             //a score of -1 indicates that the player choose Q
             if(newScore == -1){
                 done = true;
+                quit = true;
             }else if(newScore == -2){
-                System.out.println("inside else if should take next turn with 6 new dice");
                 scoreCalculator.setValidMeldDiceCount(scoreCalculator.getValidMeldDiceCount() +scoreCalculator.getCurrentValidMeldDiceCount());
                 if (scoreCalculator.getMeldScore() > 0){
                     for (int i = 0; i < 6; i++){
@@ -227,12 +231,32 @@ public class FarkleGame{
      * An empty input line is passed to the player object unchanged
      */
     void makePlayers(){
-        System.out.println("Enter your name or press enter to continue");
+        System.out.println("What is the player#1's name? [Unknown Player]");
         Scanner name = new Scanner(System.in);
         String newName = name.nextLine();
         player.setName(newName);
     }
+
+    void endPoints(){
+        Scanner endPoints = new Scanner(System.in);
+        String newValue = endPoints.nextLine();
+        if (newValue.isEmpty()){}
+        else{
+            neededPoints = Integer.parseInt(newValue.trim());
+        }
+    }
+
+    boolean checkIfGameOver(){
+        if (player.getTotalScore() < neededPoints || quit){
+            return true;
+        }else {return false;}
+    }
     
+    void reset(){
+        dice.fullReset();
+        scoreCalculator.reset();
+        savedMeld.reset();
+    }
     /**
      * Starts the console game and plays one farkle turn.
      * Prints the welcome banner, requests the payers name and starts play
@@ -242,8 +266,13 @@ public class FarkleGame{
         System.out.println("************************************************************************\n"+
                            "*           Zag Farkle by Braden!                                      *\n"+
                            "*                      Copyright: 2026                                 *\n" +
-                           "************************************************************************");
+                           "************************************************************************\n" +
+                           "How many points would you like to play in this game? [10000]");
+        game.endPoints();
         game.makePlayers();
-        game.takeTurn();
+        while(game.checkIfGameOver()){
+            game.takeTurn();
+            game.reset();
+        }
     }
 }

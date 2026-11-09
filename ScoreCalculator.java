@@ -63,9 +63,13 @@ public class ScoreCalculator{
 
         //A straight must contain one of every die value from 1 to 6
         boolean isStraight = true;
+        boolean threeOfAKind = false;
         for(int i = 1; i < 7; i++){
             if(meldDiceSizesCount[i] != 1){
                     isStraight = false;
+            }
+            if(meldDiceSizesCount[i] == 3){
+                threeOfAKind = true;
             }
         }
         if(isStraight){
@@ -80,7 +84,18 @@ public class ScoreCalculator{
                     pairCounts++;
                 }
             }
-            if(pairCounts == 3){
+            if (pairCounts == 1 && threeOfAKind) {
+                meldScore+= 1500;
+                currentValidMeldDiceCount = 5;
+                if(meldDiceSizesCount[1] == 1){
+                    meldScore += 100;
+                    currentValidMeldDiceCount+=1;
+                }
+                if(meldDiceSizesCount[5] == 1){
+                    meldScore+= 50;
+                    currentValidMeldDiceCount+=1;
+                }
+            }else if(pairCounts == 3){
                 meldScore+= 750;
                 currentValidMeldDiceCount = 6;
             }else{

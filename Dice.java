@@ -161,4 +161,13 @@ public class Dice{
         }
         diceNumberCount[6] = 0;
     }
+
+    public void fullReset(){
+        for(int i = 0;i<6;i++){
+            dice[i]=0;
+            diceNumberCount[i] = 0;
+        }
+        diceNumberCount[6] = 0;
+        dieRemaining = 6;
+    }
 }
