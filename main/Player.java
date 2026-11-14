@@ -6,9 +6,9 @@
  *  Programming Assignment #3
  * 
  * @author Braden Calme
- * @version 1.0 2026-11-08
+ * @version 1.0 2026-11-13
  */
-
+package main;
 public class Player{
     //players name initially set to the defualt name
     private String name = "Unkown Player";

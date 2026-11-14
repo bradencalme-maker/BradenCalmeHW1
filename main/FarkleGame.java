@@ -4,10 +4,10 @@
  * Programming Assignment #3
  * 
  * @author Braden Calme
- * @version 2.0 2026-11-8
+ * @version 2.0 2026-11-13
  */
 
-
+package main;
 import java.util.Scanner;
 /**
  * Coordinates the player, dice, meld scoring, and console input for a farkle turn.
@@ -18,25 +18,27 @@ import java.util.Scanner;
  */
 public class FarkleGame{
     //Dice available for rolling and selection during the turn
-    Dice dice = new Dice();
+    private Dice dice = new Dice();
 
     //Calculates the current melds score and tracks valid scoring dice
-    ScoreCalculator scoreCalculator = new ScoreCalculator();
+    private ScoreCalculator scoreCalculator = new ScoreCalculator();
     //Stores dice and points saved from ealier rolls in the turn
-    SavedMeld savedMeld = new SavedMeld();
+    private SavedMeld savedMeld = new SavedMeld();
 
-    static boolean quit = false;
-    static int playerNum = 1;
-    int neededPoints = 10000;
-    static Player[] players = new Player[10];
-    String[] names = {"Bob", "Joe", "Sam", "Phoebe", "Bo", "Nix", "Micah", "Harry", "Call", "Gavin"};
+    private final Scanner input = new Scanner(System.in);
+    private static boolean quit = false;
+    private static int playerNum = 1;
+    private int neededPoints = 10000;
+    private static Player[] players = new Player[10];
+    private String[] names = {"Bob", "Joe", "Sam", "Phoebe", "Bo", "Nix", "Micah", "Harry", "Call", "Gavin"};
 
     /**
      * plays one turn unitil the player quits, pbanks, or rolls a farkle
      * Rolls the dice, processes player choices and updates the current meld,
      * saved meld, dice counts, and player score. prints the total score when the turn ends.
+     * @param player the player whos current turn it is
      */
-    void takeTurn(Player player){
+    public void takeTurn(Player player){
 
         //create the initial roll
         dice.roll();
@@ -72,8 +74,7 @@ public class FarkleGame{
                 savedMeld.hotHand();
                 dice.setDieRemaining(6);
                 scoreCalculator.setValidMeldDiceCount(0);
-                Scanner choice = new Scanner(System.in);
-                String userChoice = choice.nextLine().toUpperCase();
+                String userChoice = input.nextLine().toUpperCase();
                 String[] parts = userChoice.split("");
                 for(int i = 0; i < parts.length;i++){
                 char letter = parts[i].charAt(0);
@@ -144,15 +145,16 @@ public class FarkleGame{
     
     /**
      * Reads one line of input and processes each entered choice in order.
-     * Letters A-F move dice betweeen the hand and meld and update the remaining dice count. A q, k, or R command returns immeditaely to the turn handler.
+     * Letters A-F move dice betweeen the hand and meld and update the remaining
+     * dice count. A q, k, or R command returns immeditaely to the turn handler.
      * 
-     * #return -1 to quit, -3 to bank, or -2 to reroll; otherwise, the players current total score after processing die selections
+     * @return -1 to quit, -3 to bank, or -2 to reroll; otherwise, the players current total score after processing die selections
+     * @param player the player whos current turn it is
      */
-    int userInput(Player player){
+    public int userInput(Player player){
 
             //converts input to uppercase lowercase and uppercase input work
-            Scanner choice = new Scanner(System.in);
-            String userChoice = choice.nextLine().toUpperCase();
+            String userChoice = input.nextLine().toUpperCase();
             String[] parts = userChoice.split("");
 
             //Process each letter entered by the player
@@ -192,8 +194,10 @@ public class FarkleGame{
      * Prints the players saved hand, current hand, meld, and availavle commands.
      * Displays nonzero dice in their corresponding positions and prints the 
      * current and saved scores wihtout changing the game state
+     * 
+     * @param player the player whos current turn it is
      */
-    void print(Player player){
+    public void print(Player player){
         System.out.print(player.getName() +" it is your turn\nCurrent turns saved hand [ ");
         for(int i = 0; i < 6;i++){
             if(savedMeld.getSavedMeld(i) != 0){
@@ -231,16 +235,14 @@ public class FarkleGame{
      * Prompts for the players name and stores the entered text in the player.
      * An empty input line is passed to the player object unchanged
      */
-    void makePlayers(){
+    public void makePlayers(){
         System.out.println("How many players are going to be playing? [1]");
-        Scanner numPlayers = new Scanner(System.in);
-        String num = numPlayers.nextLine();
+        String num = input.nextLine();
         
         if(num.isEmpty()){
             players[0] = new Player();
             System.out.println("What is the player#1's name? [Unknown Player]");
-            Scanner name = new Scanner(System.in);
-            String newName = name.nextLine();
+            String newName = input.nextLine();
             if(!newName.isEmpty()){
                 players[0].setName(newName);
             }else{
@@ -252,8 +254,7 @@ public class FarkleGame{
             for (int i = 0; i < number; i++){
                 players[i] = new Player();
                 System.out.println("What is the player#"+i+"'s name? ["+ names[i] +"]");
-                Scanner name = new Scanner(System.in);
-                String newName = name.nextLine();
+                String newName = input.nextLine();
                 if(!newName.isEmpty()){
                     players[i].setName(newName);
                 }else{
@@ -264,28 +265,48 @@ public class FarkleGame{
         
     }
 
-    void endPoints(){
-        Scanner endPoints = new Scanner(System.in);
-        String newValue = endPoints.nextLine();
+    /**
+     * Reads the winning score from the console. 
+     * Keeps the existing score goal if the player presses enter without typing.
+     */
+    public void endPoints(){
+        String newValue = input.nextLine();
         if (newValue.isEmpty()){}
         else{
             neededPoints = Integer.parseInt(newValue.trim());
         }
     }
 
-    boolean checkIfGameOver(Player player){
+    /**
+     * Checks the players total score against the winning score and chekcks 
+     * wherther a quit comand was enterd.
+     * 
+     * @param player the player whose total score is checked
+     * @return true if the players score is below the goal or a quit command
+     *         was entered otherwise false
+     */
+    public boolean checkIfGameOver(Player player){
         if (player.getTotalScore() < neededPoints || quit){
             return true;
         }else {return false;}
     }
     
-    void printScores(){
+    /**
+     * Prints the current total score for each player
+     */
+    public void printScores(){
         System.out.println("Current total points:");
         for(int i = 0; i < playerNum; i++){
             System.out.println("\t"+ names[i] + ": "+players[i].getTotalScore());
         }
     }
-    void winnerScreen(){
+    
+    /**
+     * Announces the player with the highest total score and preints the scores
+     * of the remaining players. If players tie for the highest score, the 
+     * first of those players in a turn order is announced as the winner.
+     */
+    public void winnerScreen(){
         int highestScorer = 0;
         for(int i = 0; i < playerNum; i++){
             if(players[i].getTotalScore() > players[highestScorer].getTotalScore()){
@@ -299,9 +320,14 @@ public class FarkleGame{
             }
         }
     }
-    void reset(){
+    
+    /**
+     * Resets the dice,, current meld, and saved Meld for the next players turn.
+     */
+    public void reset(){
         dice.fullReset();
         scoreCalculator.reset();
+        scoreCalculator.setValidMeldDiceCount(0);
         savedMeld.reset();
     }
     /**

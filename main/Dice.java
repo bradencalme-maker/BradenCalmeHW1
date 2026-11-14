@@ -7,8 +7,9 @@
  * Programming Assignment #3
  * 
  * @author Braden Calme
- * @version 1.0 2026-11-08
+ * @version 1.0 2026-11-13
  */
+package main;
 public class Dice{
     //Number of dice positions to fill during the next roll initially six
     private int dieRemaining = 6;
@@ -162,6 +163,10 @@ public class Dice{
         diceNumberCount[6] = 0;
     }
 
+    /**
+     * Clearts all stored dice values and face value counts to zero
+     * Resets dice number counts and die remaining
+     */
     public void fullReset(){
         for(int i = 0;i<6;i++){
             dice[i]=0;

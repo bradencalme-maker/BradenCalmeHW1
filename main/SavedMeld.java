@@ -5,9 +5,9 @@
  * Programming Assignment #3
  * 
  * @author Braden Calme
- * @version 1.0 2026-11-08
+ * @version 1.0 2026-11-13
  */
-
+package main;
 public class SavedMeld{
     //six saved dice positions; zeor represents an empty position
     private int[] savedMeld = {0,0,0,0,0,0};
@@ -87,11 +87,15 @@ public class SavedMeld{
         }
     }
 
+    /**
+     * Clears the saved dice and resets their count for next players turn.
+     * Sets all six array entries and the count to zero 
+     */
     public void reset(){
         for (int i = 0; i < 6; i++){
             savedMeld[i] = 0;
         }
-        savedMeldScore =0;
+        savedMeldScore = 0;
         savedMeldCount = 0;
     }
 

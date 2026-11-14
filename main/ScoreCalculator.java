@@ -6,8 +6,9 @@
  * Programming Assignment #3
  * 
  * @author Braden Calme
- * @version 1.0 2026-11-08
+ * @version 1.0 2026-11-13
  */
+package main;
 public class ScoreCalculator{
     //Score produced by the most recent calculation or zero after a reset
     private int meldScore;

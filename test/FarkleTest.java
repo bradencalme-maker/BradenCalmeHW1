@@ -1,19 +1,22 @@
-/*
+/**
  * Tests scoring combinations, player naming, and Farkle detection.
  * CPSC 224 - Software Development
  * Programming Assignment #3
  *
  * @author Braden Calme
- * @version 1.0 2026-11-08
+ * @version 1.0 2026-11-13
  */
 
 
-/**
- * Tests the scoring and player behavior required by the assignment.
- *
- * @author Braden
- * @version 1.0 2026-10-11
- */
+package test;
+import org.junit.jupiter.api.Test;
+
+import main.Dice;
+import main.Player;
+import main.ScoreCalculator;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class FarkleTest{
 
@@ -37,82 +40,56 @@ public class FarkleTest{
      * Checks that a straight scores 1000 points.
      * Uses one die of each face value from 1 through 6.
      *
-     * @return true if value matches false otherwise
      */
-    public static boolean testStraight() {
+    @Test
+    public void testStraight() {
         ScoreCalculator calculator = createMeld(1,2,3,4,5,6);
-
-        calculator.calculateMeldScore();
-
-        if (calculator.getMeldScore() == 1000){
-            return true;
-        }
-        return false;
+         calculator.calculateMeldScore();
+         assertEquals(1000, calculator.getMeldScore());
     }
+
 
     /**
      * Checks that three pairs score 750 points.
      * Uses pairs without ones or fives to isolate the three-pair scoring rule.
-     *
-     * @return true if value matches false otherwise
      */   
-    public static boolean testThreePairs(){
+    @Test
+    public void testThreePairs(){
         ScoreCalculator calculator = createMeld(1,1,2,2,3,3);
-        
-        calculator.calculateMeldScore();
-
-        if (calculator.getMeldScore() == 750){
-            return true;
-        }
-        return false;
+         calculator.calculateMeldScore();
+         assertEquals(750, calculator.getMeldScore());
     }
 
-    public static boolean testFullHouse(){
-        ScoreCalculator calculator = createMeld(1,1,1,2,3,3);
-        
-        calculator.calculateMeldScore();
-
-        if (calculator.getMeldScore() == 1500){
-            return true;
-        }
-        return false;
+    @Test
+    public void testFullHouse(){
+         ScoreCalculator calculator = createMeld(1,1,1,2,3,3);
+         calculator.calculateMeldScore();
+         assertEquals(1500, calculator.getMeldScore());
     }
+
 
 
     /**
      * Checks that a single selected one scores 100 points.
      * The remaining five positions are empty and contribute no points.
-     *
-     * @return true if value matches false otherwise
      */ 
-    public static boolean testSingleOne(){
+    @Test
+    public void testSingleOne(){
         ScoreCalculator calculator = createMeld(1,0,0,0,0,0);
-        
         calculator.calculateMeldScore();
-
-        if (calculator.getMeldScore() == 100){
-            return true;
-        }
-        return false;
+         assertEquals(100, calculator.getMeldScore());
     }
 
 
     /**
      * Checks that setting the player's name stores the supplied text.
      * Reads the name back through the public getter.
-     *
-     * @return true if value matches false otherwise
      */
-    public static boolean testPlayerName(){
+    @Test
+    public void testPlayerName(){
         Player player = new Player();
-
         player.setName("Braden");
-
-        if (player.getName().equals("Braden")){
-            return true;
-        
-        }
-        return false;
+        assertEquals("Braden", player.getName());
     }
 
     /**
@@ -143,21 +120,4 @@ public class FarkleTest{
         }
         return false;
     }
-
-    /**
-     * Runs the five required tests and prints a message when each passes or fails.
-     *
-     * @param args command-line arguments; not used
-     */
-    public static void main(String[] args) {
-        System.out.println("Test Straight: " + testStraight());
-        System.out.println("Test three Pairs: " + testThreePairs());
-        System.out.println("Test single one: " + testSingleOne());
-        System.out.println("Test player name: " + testPlayerName());
-        System.out.println("Test farkle: " + testFarkle());
-        System.out.println("Test Full House: " + testFullHouse());
-
-    }
-
-
 }
